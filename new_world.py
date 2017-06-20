@@ -1,22 +1,14 @@
-from itertools import chain
+
 
 import matplotlib.pyplot as plt
-import scipy.misc
-import numpy as np
+
 from mpi4py import MPI
 
 
 def paint_gold(frame):
     channels = 1
     size = frame.__len__()
-    img = np.zeros((size, size, channels))
-    if size == 4:
-        for y in range(img.shape[0]):
-            for x in range(img.shape[1]):
-                if frame[y][x] == "1":
-                    img[y][x] = 1
-    scipy.misc.imshow(img)
-    scipy.misc.imsave("beautiful.png", img)
+
 
     if size == 16:
         pass
@@ -77,7 +69,7 @@ else:
     data = None
 
 data = comm.scatter(data, root = 0)
-result4 = []
+result4 = []        # TODO: o roznych dlugosciach
 result16 = []
 
 frame4 =[[],[],[],[]]
@@ -88,7 +80,7 @@ for data_pack in data:
     frame_push(frame16, data_to_bin(data_pack))
     res = calc_diff_from_gold(frame4)
     result4.append(res)
-    if res < 0.1:
+    if res < 0.1:  # TODO: mozna zadac prog dokladnosci
         paint_gold(frame4)
     res = calc_diff_from_gold(frame16)
     result16.append(res)
