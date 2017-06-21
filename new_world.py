@@ -1,14 +1,17 @@
 import os
 
+import sys
+
 from Frame import Frame
 import matplotlib.pyplot as plt
 import gold_master as gold
 from mpi4py import MPI
+# usage: new_world.py file_name desired_size precision folder_for_pics
 
-desired_size = 512   # TODO: to ma byc sciagane z parametrow wywolania : )
-precision = 0.3
-file_name = "pi_digits/10e4.txt"
-folder_for_pics = "pics"
+desired_size = int(sys.argv[2])   # TODO: to ma byc sciagane z parametrow wywolania : )
+precision = float(sys.argv[3])
+file_name = sys.argv[1]
+folder_for_pics = sys.argv[4]
 
 comm = MPI.COMM_WORLD
 world_size = MPI.COMM_WORLD.Get_size()
