@@ -41,9 +41,11 @@ result = []
 
 frame = Frame(desired_size)
 
+for i in range(desired_size-1):     # pushing through empty frame place
+    frame.data_push(data[i])
 
-for data_pack in data:
-    frame.data_push(data_pack)
+for i in range(desired_size-1, data.__len__()):
+    frame.data_push(data[i])
     res = gold.calc_diff_from_gold(frame)
     result.append(res)
     if res < precision:
