@@ -32,8 +32,7 @@ def __lfts(k):
 
 
 def piGenLeibniz():
-    """A generator function that yields the digits of Pi
-    """
+    """A generator function that yields the digits of Pi"""
     k = 1
     z = (1, 0, 0, 1)
     while True:
@@ -48,8 +47,7 @@ def piGenLeibniz():
 
 
 def getPiLeibniz(top):
-    """Returns a list containing first n digits of Pi
-    """
+    """Returns a list containing first n digits of Pi"""
     mypi = piGenLeibniz()
     result = []
     if top > 0:
@@ -59,6 +57,7 @@ def getPiLeibniz(top):
 
 
 def returnOurPi(bottom, top):
+    """Returns a string containing PI digits from range <bottom, top>"""
     pi = getPiLeibniz(top)
     new_pi = ''.join([str(x) for x in pi])
     return new_pi[bottom:top]
