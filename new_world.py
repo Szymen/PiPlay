@@ -7,17 +7,18 @@ from Frame import Frame
 import matplotlib.pyplot as plt
 import gold_master as gold
 from mpi4py import MPI
-from pi_calculation import calc_pi
-from new_calculation import getPiLeibniz
+from new_calculation import returnOurPi
 
-# usage:python new_world.py required_no_of_decimals_of_pi desired_size precision folder_for_pics
+# usage:python new_world.py bottom_border_of_pi_decimal top_border_of_pi_decimal desired_size precision folder_for_pics
 
-desired_size = int(sys.argv[2]) 
-precision = float(sys.argv[3])
+desired_size = int(sys.argv[3])
+precision = float(sys.argv[4])
 # file_name = sys.argv[1]
-folder_for_pics = sys.argv[4]
-chosen_pi_decimals = int(sys.argv[1])
-print(chosen_pi_decimals)
+folder_for_pics = sys.argv[5]
+top_pi_decimal = int(sys.argv[2])
+bottom_pi_decimal = int(sys.argv[1])
+print("top: %s", top_pi_decimal)
+print("bottom: %s", bottom_pi_decimal)
 
 comm = MPI.COMM_WORLD
 world_size = MPI.COMM_WORLD.Get_size()
@@ -25,11 +26,11 @@ rank = MPI.COMM_WORLD.Get_rank()
 
 if rank == 0:
     # pi_text = open(file_name, "r")
-    pi_array = getPiLeibniz(chosen_pi_decimals)
-    print(pi_array)
-    pi_text = int(''.join(map(str, pi_array)))
+    pi_text = returnOurPi(bottom_pi_decimal, top_pi_decimal + 1)
     print(pi_text)
-    dx = int(pi_text.__len__()/world_size) #TODO: TUTAJ SIĘ KRZACZY, BO INNE FORMATY
+    # pi_text = int(''.join(map(str, pi_array)))
+    # print(pi_text)
+    dx = int(pi_text.__len__()/world_size)
     data = list()
     if dx < desired_size:
         print("Desired frame size cant be bigger than calculating units.")

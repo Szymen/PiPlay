@@ -47,12 +47,18 @@ def piGenLeibniz():
             k += 1
 
 
-def getPiLeibniz(n):
+def getPiLeibniz(top):
     """Returns a list containing first n digits of Pi
     """
     mypi = piGenLeibniz()
     result = []
-    if n > 0:
-        result += [next(mypi) for i in range(n)]
+    if top > 0:
+        result += [next(mypi) for i in range(top)]
     mypi.close()
     return result
+
+
+def returnOurPi(bottom, top):
+    pi = getPiLeibniz(top)
+    new_pi = ''.join([str(x) for x in pi])
+    return new_pi[bottom:top]
