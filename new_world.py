@@ -1,31 +1,45 @@
 import os
 
 import sys
+from math import pi
 
 from Frame import Frame
 import matplotlib.pyplot as plt
 import gold_master as gold
 from mpi4py import MPI
-# usage: new_world.py file_name desired_size precision folder_for_pics
+import pi_calculation
+
+# usage:python new_world.py required_no_of_decimals_of_pi desired_size precision folder_for_pics
 
 desired_size = int(sys.argv[2])   # TODO: to ma byc sciagane z parametrow wywolania : )
 precision = float(sys.argv[3])
-file_name = sys.argv[1]
+# file_name = sys.argv[1]
 folder_for_pics = sys.argv[4]
+chosen_pi_decimals = int(sys.argv[1])
 
 comm = MPI.COMM_WORLD
 world_size = MPI.COMM_WORLD.Get_size()
 rank = MPI.COMM_WORLD.Get_rank()
 
+digits = pi_calculation.pi_digits(chosen_pi_decimals)
+
 if rank == 0:
 
-    pi_text = open(file_name, "r")
-    pi_text = pi_text.read().replace(".", "")
+    # pi_text = open(file_name, "r")
+
+
+    pi_array = []
+    for d in digits:
+        pi_array.append(str(d))
+    pi_array = pi_array[:1] + ['.'] + pi_array[1:]
+    pi_text = "".join(pi_array)
+    pi_text = pi_text.replace(".", "")
+    print(pi_text)
     dx = int(pi_text.__len__()/world_size)
     data = list()
     if dx < desired_size:
         print("Desired frame size cant be bigger than calculating units.")
-        os.exit()
+        exit()
     for x in range(world_size):
         begin = dx * x
         end = dx * (x + 1)
