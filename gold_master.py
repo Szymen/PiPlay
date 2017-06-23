@@ -38,6 +38,7 @@ def paint_gold(frame, folder_name):
             else:
                 pxls[x, y] = 1
 
-    # gold = gold.resize((128,128), Image.LINEAR)       # TODO: zrobić resize
+    if gold.size[0] < 128:
+        gold = gold.resize((128,128), Image.NONE)
     #gold.show()
     gold.save("{}/{}.BMP".format(folder_name,frame.__hash__()), "BMP")

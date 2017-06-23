@@ -8,21 +8,46 @@ from new_calculation import returnOurPi
 
 # usage:python new_world.py bottom_border_of_pi_digits top_border_of_pi_digits desired_size precision folder_for_pics
 
-desired_size = int(sys.argv[3])
-precision = float(sys.argv[4])
-folder_for_pics = sys.argv[5]
-top_pi_decimal = int(sys.argv[2])
-bottom_pi_decimal = int(sys.argv[1])
-# print("top: %s", top_pi_decimal)
-# print("bottom: %s", bottom_pi_decimal)
-
 comm = MPI.COMM_WORLD
 world_size = MPI.COMM_WORLD.Get_size()
 rank = MPI.COMM_WORLD.Get_rank()
 
+
+if sys.argv.__len__() == 6:
+    desired_size = int(sys.argv[3])
+    precision = float(sys.argv[4])
+    folder_for_pics = sys.argv[5]
+
+    top_pi_decimal = int(sys.argv[2])
+    bottom_pi_decimal = int(sys.argv[1])
+    own = True
+
+elif sys.argv.__len__() == 5:
+    file_name = sys.argv[1]
+    desired_size = int(sys.argv[2])
+    precision = float(sys.argv[3])
+    folder_for_pics = sys.argv[4]
+    own = False
+else:
+    if rank == 0:
+        print("Usage when reads Pi from text:\n\t\
+$mpiexec -n [num] python3 new_world.py Pi_file_name  frame_size precision folder_for_pics")
+        print("Usage when want to calculate Pi by self:\n\t\
+$mpiexec -n [num] python3 new_world.py bottom_border_of_pi_digits top_border_of_pi_digits frame_size precision folder_for_pics")
+    sys.exit()
+
+
+# print("top: %s", top_pi_decimal)
+# print("bottom: %s", bottom_pi_decimal)
 if rank == 0:
-    pi_text = returnOurPi(bottom_pi_decimal, top_pi_decimal)
+
+    if own:
+        pi_text = returnOurPi(bottom_pi_decimal, top_pi_decimal)
     # print(pi_text)
+    else:
+        pi_text = open(file_name, "r")
+        pi_text = pi_text.read().replace(".", "")
+
     dx = int(pi_text.__len__() / world_size)
     data = list()
     if dx < desired_size:
@@ -62,7 +87,6 @@ if rank == 0:
     for x in results:
         res_map[x[1]] = x[0]
 
-    # x = range(pi_text.__len__() + desired_size*world_size - world_size*2 + 2) # TODO: nie wiem ile generuje danych i czy nie jest za duzo
     y = []
 
     for i in range(world_size):
